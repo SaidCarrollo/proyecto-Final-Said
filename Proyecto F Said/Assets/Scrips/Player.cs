@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Rigidbody myRB;
     [SerializeField] public float velocity;
     [SerializeField] private float runVelocity = 5f;
-
+    [SerializeField] private Transform cameraTransform;
     private float originalVelocity;
 
     void Start()
@@ -17,14 +17,19 @@ public class Player : MonoBehaviour
         originalVelocity = velocity;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void FixedUpdate()
     {
-        myRB.velocity = new Vector3(_movement.x, myRB.velocity.y, _movement.y);
+        Vector3 forward = cameraTransform.forward;
+        Vector3 right = cameraTransform.right;
+
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+        Vector3 desiredMoveDirection = (forward * _movement.y + right * _movement.x).normalized * velocity;
+        myRB.velocity = new Vector3(desiredMoveDirection.x, myRB.velocity.y, desiredMoveDirection.z);
     }
 
     public void Movement(InputAction.CallbackContext context)
