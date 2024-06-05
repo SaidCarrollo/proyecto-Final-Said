@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float runVelocity = 5f;
     [SerializeField] private Transform cameraTransform;
     private float originalVelocity;
+    public float raycastDistance = 19f; 
+    public LayerMask interactableLayer;
+    private PriorityQueue<GameObject> inventory; 
+    private Camera mainCamera;
 
     void Start()
     {
@@ -47,5 +51,20 @@ public class Player : MonoBehaviour
             velocity = originalVelocity;
         }
         _movement = _movement.normalized * velocity;
+    }
+    public void Grab(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+            RaycastHit hitInfo;
+
+            if (Physics.Raycast(ray, out hitInfo, raycastDistance, interactableLayer))
+            {
+                GameObject objectToDestroy = hitInfo.collider.gameObject;
+                Destroy(objectToDestroy);
+                Debug.Log("Objecto guardado: " + objectToDestroy.name);
+            }
+        }
     }
 }
