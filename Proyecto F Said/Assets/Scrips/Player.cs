@@ -10,7 +10,9 @@ public class Player : MonoBehaviour
     [SerializeField] public float velocity;
     [SerializeField] private float runVelocity = 5f;
     [SerializeField] private Transform cameraTransform;
+    [SerializeField] private AnimationCurve accelerationCurve;
     private float originalVelocity;
+    private float timeSinceStartedRunning = 0f;
     public float raycastDistance = 19f; 
     public LayerMask interactableLayer;
     private PriorityQueue<GameObject> inventory; 
@@ -31,8 +33,17 @@ public class Player : MonoBehaviour
 
         forward.Normalize();
         right.Normalize();
-
-        Vector3 desiredMoveDirection = (forward * _movement.y + right * _movement.x).normalized * velocity;
+        if (_movement != Vector2.zero)
+        {
+            timeSinceStartedRunning += Time.fixedDeltaTime;
+        }
+        else
+        {
+            timeSinceStartedRunning = 0f;
+        }
+        float currentAcceleration = accelerationCurve.Evaluate(timeSinceStartedRunning);
+        float currentVelocity = velocity * currentAcceleration;
+        Vector3 desiredMoveDirection = (forward * _movement.y + right * _movement.x).normalized * currentVelocity;
         myRB.velocity = new Vector3(desiredMoveDirection.x, myRB.velocity.y, desiredMoveDirection.z);
     }
 
