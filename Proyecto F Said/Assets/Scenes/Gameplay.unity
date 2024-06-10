@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -993,6 +993,7 @@ GameObject:
   m_Component:
   - component: {fileID: 722603530}
   - component: {fileID: 722603531}
+  - component: {fileID: 722603532}
   m_Layer: 5
   m_Name: SFXSlider
   m_TagString: Untagged
@@ -1073,6 +1074,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &722603532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722603529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f9065a2dda528438268dad193a353a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 722603531}
 --- !u!1 &726103341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,6 +1547,7 @@ GameObject:
   - component: {fileID: 805863193}
   - component: {fileID: 805863192}
   - component: {fileID: 805863191}
+  - component: {fileID: 805863194}
   m_Layer: 5
   m_Name: Despausar
   m_TagString: Untagged
@@ -1654,6 +1669,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 805863189}
   m_CullTransparentMesh: 1
+--- !u!114 &805863194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805863189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe374da8ae69b934cb316f2b6f6872ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &910143355
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,6 +1693,7 @@ GameObject:
   - component: {fileID: 910143359}
   - component: {fileID: 910143358}
   - component: {fileID: 910143357}
+  - component: {fileID: 910143360}
   m_Layer: 5
   m_Name: Pausar
   m_TagString: Untagged
@@ -1787,6 +1815,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910143355}
   m_CullTransparentMesh: 1
+--- !u!114 &910143360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910143355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe374da8ae69b934cb316f2b6f6872ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &923931827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2388,6 +2428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1244251427}
   - component: {fileID: 1244251428}
+  - component: {fileID: 1244251429}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -2468,6 +2509,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1244251429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244251426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f9065a2dda528438268dad193a353a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1244251428}
 --- !u!1 &1296787138
 GameObject:
   m_ObjectHideFlags: 0
@@ -2613,6 +2667,7 @@ GameObject:
   - component: {fileID: 1317506371}
   - component: {fileID: 1317506373}
   - component: {fileID: 1317506372}
+  - component: {fileID: 1317506374}
   m_Layer: 5
   m_Name: Menu Configuracion
   m_TagString: Untagged
@@ -2681,6 +2736,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1317506370}
   m_CullTransparentMesh: 1
+--- !u!225 &1317506374
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317506370}
+  m_Enabled: 0
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1401060468
 GameObject:
   m_ObjectHideFlags: 0
@@ -3285,6 +3352,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1786067137}
   - component: {fileID: 1786067138}
+  - component: {fileID: 1786067139}
   m_Layer: 5
   m_Name: MasterSlider
   m_TagString: Untagged
@@ -3365,6 +3433,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1786067139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786067136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2f9065a2dda528438268dad193a353a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1786067138}
 --- !u!1 &1786339222
 GameObject:
   m_ObjectHideFlags: 0

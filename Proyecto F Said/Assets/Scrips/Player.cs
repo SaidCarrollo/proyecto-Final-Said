@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using DG.Tweening;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Vector2 _movement;
@@ -62,9 +62,23 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(ray, out hitInfo, raycastDistance, interactableLayer))
             {
                 GameObject objectToDestroy = hitInfo.collider.gameObject;
-                Destroy(objectToDestroy);
-                Debug.Log("Objecto guardado: " + objectToDestroy.name);
+                AnimateAndDestroy(objectToDestroy);
             }
         }
+    }
+
+    private void AnimateAndDestroy(GameObject objectToDestroy)
+    {
+        float duration = 1.0f;
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(objectToDestroy.transform.DOScale(Vector3.zero, duration));
+        sequence.Join(objectToDestroy.transform.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360));
+
+        sequence.OnComplete(() =>
+        {
+            Destroy(objectToDestroy);
+            Debug.Log("Objecto guardado: " + objectToDestroy.name);
+        });
     }
 }
