@@ -13,11 +13,11 @@ public class Player : MonoBehaviour
     [SerializeField] private AnimationCurve accelerationCurve;
     private float originalVelocity;
     private float timeSinceStartedRunning = 0f;
-    public float raycastDistance = 19f; 
+    public float raycastDistance = 19f;
     public LayerMask interactableLayer;
-    private PriorityQueue<GameObject> inventory; 
+    private PriorityQueue<GameObject> inventory;
     private Camera mainCamera;
-
+    public Gamemanager gamemanger;
     void Start()
     {
         originalVelocity = velocity;
@@ -88,8 +88,28 @@ public class Player : MonoBehaviour
 
         sequence.OnComplete(() =>
         {
-            Destroy(objectToDestroy);
-            Debug.Log("Objecto guardado: " + objectToDestroy.name);
+            Item item = objectToDestroy.GetComponent<Item>();
+            if (item != null)
+            {
+                string itemName = item.itemName;
+                if (gamemanger != null)
+                {
+                    gamemanger.UpdateInventoryText(itemName);
+                }
+                else
+                {
+                    Debug.LogWarning("GameManager no está asignado en Player script.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("El objeto no tiene el script Item.");
+            }
+
+            if (objectToDestroy != null)
+            {
+                Destroy(objectToDestroy);
+            }
         });
     }
 }
