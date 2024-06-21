@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Puerta
+  - Objeto
   layers:
   - Default
   - TransparentFX

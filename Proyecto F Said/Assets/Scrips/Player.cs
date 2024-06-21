@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using TMPro;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Vector2 _movement;
@@ -18,9 +19,11 @@ public class Player : MonoBehaviour
     private PriorityQueue<GameObject> inventory;
     private Camera mainCamera;
     public Gamemanager gamemanger;
+    public TextMeshProUGUI infoText;
     void Start()
     {
         originalVelocity = velocity;
+        infoText.alpha = 0f;
     }
 
     void FixedUpdate()
@@ -73,7 +76,17 @@ public class Player : MonoBehaviour
             if (Physics.Raycast(ray, out hitInfo, raycastDistance, interactableLayer))
             {
                 GameObject objectToDestroy = hitInfo.collider.gameObject;
-                AnimateAndDestroy(objectToDestroy);
+
+                if (objectToDestroy.CompareTag("Objeto"))
+                {
+                    AnimateAndDestroy(objectToDestroy);
+
+                }
+                else
+                {
+                    Debug.LogWarning("El objeto no tiene el tag 'Objeto'. No se puede agarrar.");
+                    ShowInfoText("No se puede agarrar este objeto");
+                }
             }
         }
     }
@@ -110,6 +123,17 @@ public class Player : MonoBehaviour
             {
                 Destroy(objectToDestroy);
             }
+        });
+    }
+    private void ShowInfoText(string message)
+    {
+        float duration = 0.5f;
+        infoText.text = message;
+        infoText.alpha = 0f;
+        infoText.DOFade(1f, duration);
+        DOVirtual.DelayedCall(1.0f, () =>
+        {
+            infoText.DOFade(0f, duration);
         });
     }
 }

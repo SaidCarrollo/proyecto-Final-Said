@@ -1,24 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Menu : MonoBehaviour
 {
     [SerializeField] private GameObject BotonPausa;
     [SerializeField] private GameObject BotonDespausar;
 
-
-    public void pausa()
+    private bool estaEnPausa = false;
+    public void Pausa(InputAction.CallbackContext contexto)
     {
-        Time.timeScale = 0f;
-        BotonPausa.SetActive(false);
-        BotonDespausar.SetActive(true);
-    }
+        if (contexto.performed)
+        {
+            estaEnPausa = !estaEnPausa;
 
-    public void reanudar()
-    {
-        Time.timeScale = 1f;
-        BotonPausa.SetActive(true);
-        BotonDespausar.SetActive(false);
+            if (estaEnPausa)
+            {
+                Time.timeScale = 0f;
+                BotonPausa.SetActive(false);
+                BotonDespausar.SetActive(true);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+                BotonPausa.SetActive(true);
+                BotonDespausar.SetActive(false);
+            }
+        }
     }
 }
