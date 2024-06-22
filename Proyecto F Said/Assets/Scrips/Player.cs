@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     private Camera mainCamera;
     public Gamemanager gamemanger;
     public TextMeshProUGUI infoText;
+    [SerializeField] private float rotationSpeed = 5f;
     void Start()
     {
         originalVelocity = velocity;
@@ -38,7 +39,11 @@ public class Player : MonoBehaviour
         right.Normalize();
         if (_movement != Vector2.zero)
         {
+
             timeSinceStartedRunning += Time.fixedDeltaTime;
+            Vector3 moveDirection = (forward * _movement.y + right * _movement.x).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * rotationSpeed);
         }
         else
         {
