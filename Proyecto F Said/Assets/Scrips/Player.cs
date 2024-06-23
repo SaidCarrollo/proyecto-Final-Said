@@ -16,19 +16,21 @@ public class Player : MonoBehaviour
     private float timeSinceStartedRunning = 0f;
     public float raycastDistance = 19f;
     public LayerMask interactableLayer;
-   // private PriorityQueue<GameObject> inventory;
     private Camera mainCamera;
     public Gamemanager gamemanger;
     public TextMeshProUGUI infoText;
     [SerializeField] private float rotationSpeed = 5f;
+   
+
     void Start()
     {
         originalVelocity = velocity;
         infoText.alpha = 0f;
-      //  Cursor.visible = false;
-        
+        //  Cursor.visible = false;
+
         //Cursor.lockState = CursorLockMode.Locked;
     }
+  
     private void Update()
     {
         /*if (Cursor.lockState != CursorLockMode.Locked)
@@ -151,4 +153,5 @@ public class Player : MonoBehaviour
             infoText.DOFade(0f, duration);
         });
     }
+  
 }

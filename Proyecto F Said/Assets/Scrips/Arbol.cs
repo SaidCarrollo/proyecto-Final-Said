@@ -18,8 +18,8 @@ public class Tree<T>
 
     public class TreeNode
     {
-        public SimplyLinkedListNode ListNode { get; set; } // Referencia al nodo de la lista enlazada
-        public List<TreeNode> Children { get; set; } // Hijos del nodo en el árbol
+        public SimplyLinkedListNode ListNode { get; set; }
+        public List<TreeNode> Children { get; set; }
 
         public TreeNode(SimplyLinkedListNode listNode)
         {
@@ -68,8 +68,8 @@ public class Tree<T>
 
     public void AddNode(T value, T fatherValue)
     {
-        SimplyLinkedListNode newNode = InsertNodeAtEnd(value); // Inserta el nodo en la lista
-        TreeNode treeNode = new TreeNode(newNode); // Crea un nuevo nodo para el árbol
+        SimplyLinkedListNode newNode = InsertNodeAtEnd(value);
+        TreeNode treeNode = new TreeNode(newNode);
 
         if (root == null)
         {
@@ -77,10 +77,10 @@ public class Tree<T>
         }
         else
         {
-            TreeNode fatherNode = FindTreeNode(root, fatherValue); // Encuentra el padre en el árbol
+            TreeNode fatherNode = FindTreeNode(root, fatherValue);
             if (fatherNode != null)
             {
-                fatherNode.Children.Add(treeNode); // Añade el nuevo nodo como hijo del padre
+                fatherNode.Children.Add(treeNode);
             }
             else
             {
@@ -91,16 +91,52 @@ public class Tree<T>
 
     private TreeNode FindTreeNode(TreeNode currentNode, T value)
     {
-        if (currentNode.ListNode.Value.Equals(value))
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.Push(currentNode);
+
+        while (stack.Count > 0)
         {
-            return currentNode;
+            TreeNode node = stack.Pop();
+
+            if (node.ListNode.Value.Equals(value))
+            {
+                return node;
+            }
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                stack.Push(node.Children[i]);
+            }
         }
-        foreach (TreeNode child in currentNode.Children)
-        {
-            TreeNode foundNode = FindTreeNode(child, value);
-            if (foundNode != null)
-                return foundNode;
-        }
+
         return null;
+    }
+
+    public T FindFinal(TreeNode currentNode, string condition)
+    {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        stack.Push(currentNode);
+
+        while (stack.Count > 0)
+        {
+            TreeNode node = stack.Pop();
+
+            if (node.ListNode.Value.Equals(condition))
+            {
+                return node.ListNode.Value;
+            }
+
+            for (int i = 0; i < node.Children.Count; i++)
+            {
+                stack.Push(node.Children[i]);
+            }
+        }
+
+        return default(T);
+    }
+
+    public TreeNode GetRoot()
+    {
+        return root;
     }
 }
