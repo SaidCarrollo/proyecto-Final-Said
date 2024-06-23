@@ -8,6 +8,7 @@ public class Menu : MonoBehaviour
 {
     [SerializeField] private GameObject BotonPausa;
     [SerializeField] private GameObject BotonDespausar;
+    [SerializeField] private GameObject Mousepuntero;
     public Volume GlobalVolume;
     public Vignette viñeta;
     private bool estaEnPausa = false;
@@ -25,6 +26,7 @@ public class Menu : MonoBehaviour
             {
                 Time.timeScale = 0f;
                 BotonPausa.SetActive(false);
+                Mousepuntero.SetActive(false);
                 BotonDespausar.SetActive(true);
                 viñeta.intensity.value = 0.843f;
             }
@@ -32,6 +34,7 @@ public class Menu : MonoBehaviour
             {
                 Time.timeScale = 1f;
                 BotonPausa.SetActive(true);
+                Mousepuntero.SetActive(true);
                 BotonDespausar.SetActive(false);
                 viñeta.intensity.value = 0f;
             }

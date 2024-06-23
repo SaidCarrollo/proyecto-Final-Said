@@ -2,21 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PriorityQueue<T>
+public class Queue<T>
 {
     private class Node
     {
         public T Value { get; set; }
-        public int Priority { get; set; }
         public Node Next { get; set; }
-        public Node Previous { get; set; }
 
-        public Node(T value, int priority)
+        public Node(T value)
         {
             Value = value;
-            Priority = priority;
             Next = null;
-            Previous = null;
         }
     }
 
@@ -24,45 +20,25 @@ public class PriorityQueue<T>
     private Node Tail { get; set; }
     private int length = 0;
 
-    public void PriorityEnqueue(T value, int priority)
+    public void Enqueue(T value)
     {
-        Node newNode = new Node(value, priority);
+        Node newNode = new Node(value);
 
         if (Head == null)
         {
             Head = newNode;
             Tail = newNode;
         }
-        else if (priority < Head.Priority)
-        {
-            newNode.Next = Head;
-            Head.Previous = newNode;
-            Head = newNode;
-        }
         else
         {
-            Node iterator = Head;
-            while (iterator.Next != null && iterator.Next.Priority <= priority)
-            {
-                iterator = iterator.Next;
-            }
-            newNode.Next = iterator.Next;
-            if (iterator.Next != null)
-            {
-                iterator.Next.Previous = newNode;
-            }
-            iterator.Next = newNode;
-            newNode.Previous = iterator;
-            if (newNode.Next == null)
-            {
-                Tail = newNode;
-            }
+            Tail.Next = newNode;
+            Tail = newNode;
         }
 
         length++;
     }
 
-    public T PriorityDequeue()
+    public T Dequeue()
     {
         if (Head == null)
         {
@@ -70,18 +46,16 @@ public class PriorityQueue<T>
         }
         else
         {
-            Node highestPriorityNode = Head;
+            Node dequeuedNode = Head;
             Head = Head.Next;
-            if (Head != null)
-            {
-                Head.Previous = null;
-            }
-            else
+            length--;
+
+            if (Head == null)
             {
                 Tail = null;
             }
-            length--;
-            return highestPriorityNode.Value;
+
+            return dequeuedNode.Value;
         }
     }
 

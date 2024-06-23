@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     private float timeSinceStartedRunning = 0f;
     public float raycastDistance = 19f;
     public LayerMask interactableLayer;
-    private PriorityQueue<GameObject> inventory;
+   // private PriorityQueue<GameObject> inventory;
     private Camera mainCamera;
     public Gamemanager gamemanger;
     public TextMeshProUGUI infoText;
@@ -25,10 +25,20 @@ public class Player : MonoBehaviour
     {
         originalVelocity = velocity;
         infoText.alpha = 0f;
+      //  Cursor.visible = false;
+        
+        //Cursor.lockState = CursorLockMode.Locked;
     }
-
+    private void Update()
+    {
+        /*if (Cursor.lockState != CursorLockMode.Locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }*/
+    }
     void FixedUpdate()
     {
+        
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
 
@@ -75,7 +85,8 @@ public class Player : MonoBehaviour
     {
         if (context.performed)
         {
-            Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            Ray ray = Camera.main.ScreenPointToRay(screenCenter);
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo, raycastDistance, interactableLayer))
@@ -85,7 +96,6 @@ public class Player : MonoBehaviour
                 if (objectToDestroy.CompareTag("Objeto"))
                 {
                     AnimateAndDestroy(objectToDestroy);
-
                 }
                 else
                 {
