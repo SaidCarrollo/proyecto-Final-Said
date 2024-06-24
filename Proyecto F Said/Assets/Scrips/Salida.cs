@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 public class Salida : MonoBehaviour
 {
     public Player play;
+    public Gamemanager gamemanger;
     public GameObject BADE;
     public GameObject GodE;
     private Tree<string> endingsTree;
     public GameObject[] finalScreens;
-    private SimplyLinkedList<GameObject> finalScreenList; // Lista para pantallas finales
+    private SimplyLinkedList<GameObject> finalScreenList; 
 
     private void Start()
     {
@@ -25,7 +26,7 @@ public class Salida : MonoBehaviour
         endingsTree.AddNode("Final Normal", "root");
         endingsTree.AddNode("Final Secreto", "Final Normal");
         endingsTree.AddNode("Final Rápido", "Final Secreto");
-
+        endingsTree.AddNode("Final Celular", "Final Normal");
     }
 
     private void InitializeFinalScreenList()
@@ -34,7 +35,8 @@ public class Salida : MonoBehaviour
 
         finalScreenList.InsertNodeAtEnd(finalScreens[0]); 
         finalScreenList.InsertNodeAtEnd(finalScreens[1]); 
-        finalScreenList.InsertNodeAtEnd(finalScreens[2]); 
+        finalScreenList.InsertNodeAtEnd(finalScreens[2]);
+        finalScreenList.InsertNodeAtEnd(finalScreens[3]);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -56,19 +58,26 @@ public class Salida : MonoBehaviour
 
     private string DetermineCondition()
     {
-        // Aquí determina la condición basada en la velocidad del jugador, objetos recogidos, etc.
-        // Devuelve un string que corresponda a una condición en el árbol de finales
-        if (play.velocity > 5)
+
+        if (play.velocity == 5)
         {
             return "Final Rápido";
         }
-        else if (play.velocity<=5)
+        else if (play.velocity <= 3)
         {
-            return "Final Secreto";
+            GameObject firstItem = gamemanger.exampleList.ObtainNodeAtPosition(0);
+            if (firstItem != null && firstItem.name == "Celular")
+            {
+                return "Final Celular"; 
+            }
+            else
+            {
+                return "Final Normal";
+            }
         }
         else
         {
-            return "Final Normal";
+            return "Final Rapido";
         }
     }
 
@@ -76,7 +85,6 @@ public class Salida : MonoBehaviour
     {
         GameObject finalScreen = null;
 
-        // Obtener la pantalla correspondiente según el nombre del final
         if (finalName == "Final Normal")
         {
             finalScreen = finalScreenList.ObtainNodeAtPosition(0);
@@ -89,7 +97,10 @@ public class Salida : MonoBehaviour
         {
             finalScreen = finalScreenList.ObtainNodeAtPosition(2);
         }
-
+        else if (finalName == "Final Celular")
+        {
+            finalScreen = finalScreenList.ObtainNodeAtPosition(3);
+        }
         if (finalScreen != null)
         {
             finalScreen.SetActive(true);

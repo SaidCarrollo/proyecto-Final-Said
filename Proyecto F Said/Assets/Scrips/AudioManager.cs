@@ -8,14 +8,10 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
 
     public AudioMixer audioMixer;
-
-    public string masterVolumeParameter = "Master";
-    public string musicVolumeParameter = "Music";
-    public string sfxVolumeParameter = "Sfx";
+    public AudioSettings audioSettings; 
 
     private void Awake()
     {
-
         if (Instance == null)
         {
             Instance = this;
@@ -27,23 +23,25 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        SetMasterVolume(audioSettings.defaultMasterVolume);
+        SetMusicVolume(audioSettings.defaultMusicVolume);
+        SetSFXVolume(audioSettings.defaultSfxVolume);
+    }
 
     public void SetMasterVolume(float volume)
     {
-        audioMixer.SetFloat(masterVolumeParameter, volume);
+        audioMixer.SetFloat(audioSettings.masterVolumeParameter, volume);
     }
-
 
     public void SetMusicVolume(float volume)
     {
-        audioMixer.SetFloat(musicVolumeParameter, volume);
+        audioMixer.SetFloat(audioSettings.musicVolumeParameter, volume);
     }
-
 
     public void SetSFXVolume(float volume)
     {
-        audioMixer.SetFloat(sfxVolumeParameter, volume);
+        audioMixer.SetFloat(audioSettings.sfxVolumeParameter, volume);
     }
-
-
 }

@@ -7,7 +7,7 @@ using DG.Tweening;
 public class Item : MonoBehaviour
 {
     public string itemName ;
-    public int priority ;
+    //public int priority ;
     [SerializeField]private Color auraColor = Color.white;
     public float auraScaleMultiplier = 1.2f;
     public float duration = 1f;
