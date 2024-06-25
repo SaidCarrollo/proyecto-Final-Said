@@ -40,4 +40,16 @@ public class Menu : MonoBehaviour
             }
         }
     }
+    public void Pausar()
+    {
+        BotonPausa.SetActive(false);
+        //Mousepuntero.SetActive(false);
+        BotonDespausar.SetActive(true);
+    }
+    public void despausar()
+    {
+        BotonPausa.SetActive(true);
+        //Mousepuntero.SetActive(true);
+        BotonDespausar.SetActive(false);
+    }
 }

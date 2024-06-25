@@ -7,21 +7,30 @@ public class Gamemanager : MonoBehaviour
 {
     public TextMeshProUGUI inventoryText;
 
-    public SimplyLinkedList<GameObject> exampleList;
+    public Queue<GameObject> inventoryQueue;
 
     private void Awake()
     {
-        exampleList = new SimplyLinkedList<GameObject>();
+        inventoryQueue = new Queue<GameObject>();
     }
 
     public void UpdateInventoryText(string newItem)
     {
         inventoryText.text += newItem + "\n";
-        AddToLinkedList(GameObject.Find(newItem));
+        AddToQueue(GameObject.Find(newItem));
     }
 
-    public void AddToLinkedList(GameObject newItem)
+    public void AddToQueue(GameObject newItem)
     {
-        exampleList.InsertNodeAtEnd(newItem);
+        inventoryQueue.Enqueue(newItem);
+    }
+
+    public GameObject GetFirstItem()
+    {
+        if (inventoryQueue.Count() > 0)
+        {
+            return inventoryQueue.GetAllValues()[0];  
+        }
+        return null;
     }
 }

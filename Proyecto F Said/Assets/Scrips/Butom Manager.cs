@@ -43,10 +43,6 @@ public class ButomManager : MonoBehaviour
         SceneManager.LoadScene("Gameplay");
     }
 
-    public void AlMenu()
-    {
-        SceneManager.LoadScene("Menu");
-    }
 
     public void MovementCamera(float intensity, float frequency, float time)
     {

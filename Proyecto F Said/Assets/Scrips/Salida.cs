@@ -7,21 +7,18 @@ public class Salida : MonoBehaviour
 {
     public Player play;
     public Gamemanager gamemanger;
-    public GameObject BADE;
-    public GameObject GodE;
     private Tree<string> endingsTree;
     public GameObject[] finalScreens;
-    private SimplyLinkedList<GameObject> finalScreenList; 
+    private Queue<GameObject> finalScreenQueue;
 
     private void Start()
     {
         InitializeEndingsTree();
-        InitializeFinalScreenList();
+        InitializeFinalScreenQueue();
     }
 
     private void InitializeEndingsTree()
     {
- 
         endingsTree = new Tree<string>();
         endingsTree.AddNode("Final Normal", "root");
         endingsTree.AddNode("Final Secreto", "Final Normal");
@@ -29,14 +26,14 @@ public class Salida : MonoBehaviour
         endingsTree.AddNode("Final Celular", "Final Normal");
     }
 
-    private void InitializeFinalScreenList()
+    private void InitializeFinalScreenQueue()
     {
-        finalScreenList = new SimplyLinkedList<GameObject>();
+        finalScreenQueue = new Queue<GameObject>();
 
-        finalScreenList.InsertNodeAtEnd(finalScreens[0]); 
-        finalScreenList.InsertNodeAtEnd(finalScreens[1]); 
-        finalScreenList.InsertNodeAtEnd(finalScreens[2]);
-        finalScreenList.InsertNodeAtEnd(finalScreens[3]);
+        finalScreenQueue.Enqueue(finalScreens[0]);
+        finalScreenQueue.Enqueue(finalScreens[1]);
+        finalScreenQueue.Enqueue(finalScreens[2]);
+        finalScreenQueue.Enqueue(finalScreens[3]);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -58,20 +55,21 @@ public class Salida : MonoBehaviour
 
     private string DetermineCondition()
     {
-
         if (play.velocity == 5)
         {
             return "Final Rápido";
         }
         else if (play.velocity <= 3)
         {
-            GameObject firstItem = gamemanger.exampleList.ObtainNodeAtPosition(0);
+            GameObject firstItem = gamemanger.GetFirstItem();
             if (firstItem != null && firstItem.name == "Celular")
             {
-                return "Final Celular"; 
+                Debug.Log("Returning 'Final Celular'");
+                return "Final Celular";
             }
             else
             {
+                Debug.Log("Returning 'Final Normal'");
                 return "Final Normal";
             }
         }
@@ -87,24 +85,24 @@ public class Salida : MonoBehaviour
 
         if (finalName == "Final Normal")
         {
-            finalScreen = finalScreenList.ObtainNodeAtPosition(0);
+            finalScreen = finalScreenQueue.Dequeue();
         }
         else if (finalName == "Final Secreto")
         {
-            finalScreen = finalScreenList.ObtainNodeAtPosition(1);
+            finalScreen = finalScreenQueue.Dequeue();
         }
         else if (finalName == "Final Rápido")
         {
-            finalScreen = finalScreenList.ObtainNodeAtPosition(2);
+            finalScreen = finalScreenQueue.Dequeue();
         }
         else if (finalName == "Final Celular")
         {
-            finalScreen = finalScreenList.ObtainNodeAtPosition(3);
+            finalScreen = finalScreenQueue.Dequeue();
         }
         if (finalScreen != null)
         {
             finalScreen.SetActive(true);
-            Time.timeScale = 0; 
+            Time.timeScale = 0;
         }
         else
         {

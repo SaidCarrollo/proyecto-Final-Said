@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public Gamemanager gamemanger;
     public TextMeshProUGUI infoText;
     [SerializeField] private float rotationSpeed = 5f;
-   
+    public AudioSource Tomar; 
 
     void Start()
     {
@@ -93,11 +93,12 @@ public class Player : MonoBehaviour
 
             if (Physics.Raycast(ray, out hitInfo, raycastDistance, interactableLayer))
             {
-                GameObject objectToDestroy = hitInfo.collider.gameObject;
+                GameObject objectToDisable = hitInfo.collider.gameObject;
 
-                if (objectToDestroy.CompareTag("Objeto"))
+                if (objectToDisable.CompareTag("Objeto"))
                 {
-                    AnimateAndDestroy(objectToDestroy);
+                    Tomar.Play();
+                    AnimateAndDestroy(objectToDisable);
                 }
                 else
                 {
@@ -108,17 +109,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void AnimateAndDestroy(GameObject objectToDestroy)
+    private void AnimateAndDestroy(GameObject objectToDisable)
     {
         float duration = 1.0f;
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Append(objectToDestroy.transform.DOScale(Vector3.zero, duration));
-        sequence.Join(objectToDestroy.transform.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360));
+        sequence.Append(objectToDisable.transform.DOScale(Vector3.zero, duration));
+        sequence.Join(objectToDisable.transform.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360));
 
         sequence.OnComplete(() =>
         {
-            Item item = objectToDestroy.GetComponent<Item>();
+            Item item = objectToDisable.GetComponent<Item>();
             if (item != null)
             {
                 string itemName = item.itemName;
@@ -136,10 +137,8 @@ public class Player : MonoBehaviour
                 Debug.LogWarning("El objeto no tiene el script Item.");
             }
 
-            if (objectToDestroy != null)
-            {
-                Destroy(objectToDestroy);
-            }
+            // Desactivar el objeto en lugar de destruirlo
+            objectToDisable.SetActive(false);
         });
     }
     private void ShowInfoText(string message)
