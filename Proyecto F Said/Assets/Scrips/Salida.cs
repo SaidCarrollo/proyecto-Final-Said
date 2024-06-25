@@ -57,6 +57,7 @@ public class Salida : MonoBehaviour
     {
         if (play.velocity == 5)
         {
+            Debug.Log("Returning 'Final Rapido'");
             return "Final Rápido";
         }
         else if (play.velocity <= 3)
