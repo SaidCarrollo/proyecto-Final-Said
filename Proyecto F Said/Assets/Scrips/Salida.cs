@@ -9,31 +9,35 @@ public class Salida : MonoBehaviour
     public Gamemanager gamemanger;
     private Tree<string> endingsTree;
     public GameObject[] finalScreens;
-    private Queue<GameObject> finalScreenQueue;
+    private SimplyLinkedList<GameObject> finalScreenList;
 
     private void Start()
     {
         InitializeEndingsTree();
-        InitializeFinalScreenQueue();
+        InitializeFinalScreenList();
     }
 
     private void InitializeEndingsTree()
     {
         endingsTree = new Tree<string>();
         endingsTree.AddNode("Final Normal", "root");
-        endingsTree.AddNode("Final Secreto", "Final Normal");
+        endingsTree.AddNode("Final Secreto", "root");
         endingsTree.AddNode("Final Rápido", "Final Secreto");
         endingsTree.AddNode("Final Celular", "Final Normal");
+        endingsTree.AddNode("Final Mochila", "Final Normal");
+        endingsTree.AddNode("Final Ascensor", "root");
     }
 
-    private void InitializeFinalScreenQueue()
+    private void InitializeFinalScreenList()
     {
-        finalScreenQueue = new Queue<GameObject>();
+        finalScreenList = new SimplyLinkedList<GameObject>();
 
-        finalScreenQueue.Enqueue(finalScreens[0]);
-        finalScreenQueue.Enqueue(finalScreens[1]);
-        finalScreenQueue.Enqueue(finalScreens[2]);
-        finalScreenQueue.Enqueue(finalScreens[3]);
+        finalScreenList.InsertNodeAtEnd(finalScreens[0]); // Final Normal
+        finalScreenList.InsertNodeAtEnd(finalScreens[1]); // Final Secreto
+        finalScreenList.InsertNodeAtEnd(finalScreens[2]); // Final Rápido
+        finalScreenList.InsertNodeAtEnd(finalScreens[3]); // Final Celular
+        finalScreenList.InsertNodeAtEnd(finalScreens[4]); // Final Mochila
+        finalScreenList.InsertNodeAtEnd(finalScreens[5]); // Final Ascensor
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -41,6 +45,14 @@ public class Salida : MonoBehaviour
         if (collision.gameObject.tag == "Puerta")
         {
             CheckEndCondition();
+        }
+        else if (collision.gameObject.tag == "Salida Secreta")
+        {
+            CheckSecretExitCondition();
+        }
+        else if (collision.gameObject.CompareTag("Ascensor"))
+        {
+            CheckElevatorCondition();
         }
     }
 
@@ -52,12 +64,32 @@ public class Salida : MonoBehaviour
 
         ShowFinalScreen(finalName);
     }
+    private void CheckSecretExitCondition()
+    {
+        string condition = DetermineCondition();
 
+        GameObject firstItem = gamemanger.GetFirstItem();
+        if (firstItem != null && firstItem.name == "Tendedero")
+        {
+            Debug.Log("Returning 'Final Secreto'");
+            ShowFinalScreen("Final Secreto");
+        }
+    }
+    private void CheckElevatorCondition()
+    {
+        string condition = DetermineCondition();
+
+        if (condition == "Final Ascensor")
+        {
+            ShowFinalScreen("Final Ascensor");
+        }
+    }
     private string DetermineCondition()
     {
+       
         if (play.velocity == 5)
         {
-            Debug.Log("Returning 'Final Rapido'");
+            Debug.Log("Returning 'Final Rápido'");
             return "Final Rápido";
         }
         else if (play.velocity <= 3)
@@ -76,7 +108,7 @@ public class Salida : MonoBehaviour
         }
         else
         {
-            return "Final Rapido";
+            return "Final Rápido";
         }
     }
 
@@ -84,22 +116,28 @@ public class Salida : MonoBehaviour
     {
         GameObject finalScreen = null;
 
-        if (finalName == "Final Normal")
+        switch (finalName)
         {
-            finalScreen = finalScreenQueue.Dequeue();
+            case "Final Normal":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(0);
+                break;
+            case "Final Secreto":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(1);
+                break;
+            case "Final Rápido":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(2);
+                break;
+            case "Final Celular":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(3);
+                break;
+            case "Final Mochila":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(3);
+                break;
+            case "Final Ascensor":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(5);
+                break;
         }
-        else if (finalName == "Final Secreto")
-        {
-            finalScreen = finalScreenQueue.Dequeue();
-        }
-        else if (finalName == "Final Rápido")
-        {
-            finalScreen = finalScreenQueue.Dequeue();
-        }
-        else if (finalName == "Final Celular")
-        {
-            finalScreen = finalScreenQueue.Dequeue();
-        }
+
         if (finalScreen != null)
         {
             finalScreen.SetActive(true);

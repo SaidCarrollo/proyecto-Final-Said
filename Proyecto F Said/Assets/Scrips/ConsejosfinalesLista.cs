@@ -4,39 +4,40 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ConsejosfinalesLista : MonoBehaviour
 {
-    private DoubleLinkedList<GameObject> consejosLista = new DoubleLinkedList<GameObject>();
+    public GameObject[] consejosPantallas; 
+    public Button previousButton;
+    public Button nextButton; 
 
+    private DoubleLinkedList<GameObject> consejosLista = new DoubleLinkedList<GameObject>();
     private int currentIndex = 0;
 
     void Start()
     {
-        consejosLista.InsertAtEnd(Resources.Load<GameObject>("Consejo1"));
-        consejosLista.InsertAtEnd(Resources.Load<GameObject>("Consejo2"));
-        consejosLista.InsertAtEnd(Resources.Load<GameObject>("Consejo3"));
+        for (int i = 0; i < consejosPantallas.Length; i++)
+        {
+            consejosPantallas[i].SetActive(false); 
+            consejosLista.InsertAtEnd(consejosPantallas[i]);
+        }
 
         MostrarConsejo(currentIndex);
-
-        Button previousButton = GameObject.Find("PreviousButton").GetComponent<Button>();
-        Button nextButton = GameObject.Find("NextButton").GetComponent<Button>();
-
         previousButton.onClick.AddListener(ShowPreviousConsejo);
         nextButton.onClick.AddListener(ShowNextConsejo);
     }
 
     void MostrarConsejo(int index)
     {
-        if (currentIndex >= 0 && currentIndex < consejosLista.Length())
+        DoubleLinkedList<GameObject>.Node currentNode = consejosLista.GetNodeAtPosition(currentIndex);
+        if (currentNode != null)
         {
-            DoubleLinkedList<GameObject>.Node consejoNode = consejosLista.GetNodeAtPosition(currentIndex);
-            GameObject consejoPrefab = consejoNode.Value;
-            consejoPrefab.SetActive(false);
+            currentNode.Value.SetActive(false);
         }
 
         DoubleLinkedList<GameObject>.Node newNode = consejosLista.GetNodeAtPosition(index);
-        GameObject newConsejo = newNode.Value;
-        newConsejo.SetActive(true);
-
-        currentIndex = index;
+        if (newNode != null)
+        {
+            newNode.Value.SetActive(true);
+            currentIndex = index;
+        }
     }
 
     void ShowPreviousConsejo()
