@@ -8,12 +8,12 @@ public class ButonManger : MonoBehaviour
     public GameObject Cerrar;
     public void AbrirLista()
     {
-        Abrir.SetActive(false);
+        Abrir.SetActive(true);
         Cerrar.SetActive(true);
     }
     public void CerrarLista()
     {
-        Abrir.SetActive(true);
+        Abrir.SetActive(false);
         Cerrar.SetActive(false);
     }
 
