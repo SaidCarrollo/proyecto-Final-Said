@@ -26,18 +26,18 @@ public class Player : MonoBehaviour
     {
         originalVelocity = velocity;
         infoText.alpha = 0f;
-          Cursor.visible = false;
+       /*   Cursor.visible = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;*/
     }
   
-    private void Update()
+   /* private void Update()
     {
         if (Cursor.lockState != CursorLockMode.Locked)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
-    }
+    }*/
     void FixedUpdate()
     {
         
