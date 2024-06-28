@@ -38,6 +38,7 @@ public class ConsejosfinalesLista : MonoBehaviour
             newNode.Value.SetActive(true);
             currentIndex = index;
         }
+        UpdateButtonStates();
     }
 
     void ShowPreviousConsejo()
@@ -54,5 +55,24 @@ public class ConsejosfinalesLista : MonoBehaviour
         {
             MostrarConsejo(currentIndex + 1);
         }
+    }
+    void OnEnable()
+    {
+        currentIndex = 0;
+        MostrarConsejo(currentIndex);
+    }
+
+    void OnDisable()
+    {
+        DoubleLinkedList<GameObject>.Node currentNode = consejosLista.GetNodeAtPosition(currentIndex);
+        if (currentNode != null)
+        {
+            currentNode.Value.SetActive(false);
+        }
+    }
+    void UpdateButtonStates()
+    {
+        previousButton.interactable = currentIndex > 0;
+        nextButton.interactable = currentIndex < consejosLista.Length() - 1;
     }
 }

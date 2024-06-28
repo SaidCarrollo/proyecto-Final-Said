@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public float raycastDistance = 19f;
     public LayerMask interactableLayer;
     private Camera mainCamera;
-    public Gamemanager gamemanger;
+    public GameObject ListadeObjetos;
     public TextMeshProUGUI infoText;
     [SerializeField] private float rotationSpeed = 5f;
     public AudioSource Tomar; 
@@ -26,17 +26,17 @@ public class Player : MonoBehaviour
     {
         originalVelocity = velocity;
         infoText.alpha = 0f;
-        //  Cursor.visible = false;
+          Cursor.visible = false;
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
     }
   
     private void Update()
     {
-        /*if (Cursor.lockState != CursorLockMode.Locked)
+        if (Cursor.lockState != CursorLockMode.Locked)
         {
             Cursor.lockState = CursorLockMode.Locked;
-        }*/
+        }
     }
     void FixedUpdate()
     {
@@ -123,21 +123,19 @@ public class Player : MonoBehaviour
             if (item != null)
             {
                 string itemName = item.itemName;
-                if (gamemanger != null)
+                if (ListadeObjetos != null)
                 {
-                    gamemanger.UpdateInventoryText(itemName);
+                    ListadeObjetos.GetComponent<ListadeObjetos>().UpdateInventoryText(itemName);
                 }
                 else
                 {
-                    Debug.LogWarning("GameManager no está asignado en Player script.");
+                    Debug.LogWarning("El GameObject ListadeObjetos no está asignado en el Inspector.");
                 }
             }
             else
             {
                 Debug.LogWarning("El objeto no tiene el script Item.");
             }
-
-            // Desactivar el objeto en lugar de destruirlo
             objectToDisable.SetActive(false);
         });
     }

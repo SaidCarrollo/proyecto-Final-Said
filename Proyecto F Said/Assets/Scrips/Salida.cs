@@ -2,21 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 public class Salida : MonoBehaviour
 {
     public Player play;
-    public Gamemanager gamemanger;
+    public GameObject Listadeobjetos;
     private Tree<string> endingsTree;
     public GameObject[] finalScreens;
     private SimplyLinkedList<GameObject> finalScreenList;
-
+    public float tiempoMaximo = 30f; 
+    private float tiempoRestante;
+    private bool isTimeUp = false;
+    public TextMeshProUGUI textoTiempo;
     private void Start()
     {
         InitializeEndingsTree();
         InitializeFinalScreenList();
+        tiempoRestante = tiempoMaximo;
     }
+    private void Update()
+    {
+        if (!isTimeUp)
+        {
+            tiempoRestante -= Time.deltaTime;
 
+            if (tiempoRestante <= 0)
+            {
+                tiempoRestante = 0;
+                isTimeUp = true;
+                HandleTimeUp(); 
+            }
+
+            UpdateTimeText();
+        }
+    }
     private void InitializeEndingsTree()
     {
         endingsTree = new Tree<string>();
@@ -26,6 +45,7 @@ public class Salida : MonoBehaviour
         endingsTree.AddNode("Final Celular", "Final Normal");
         endingsTree.AddNode("Final Mochila", "Final Normal");
         endingsTree.AddNode("Final Ascensor", "root");
+        endingsTree.AddNode("Final Tiempo", "root");
     }
 
     private void InitializeFinalScreenList()
@@ -38,6 +58,7 @@ public class Salida : MonoBehaviour
         finalScreenList.InsertNodeAtEnd(finalScreens[3]); // Final Celular
         finalScreenList.InsertNodeAtEnd(finalScreens[4]); // Final Mochila
         finalScreenList.InsertNodeAtEnd(finalScreens[5]); // Final Ascensor
+        finalScreenList.InsertNodeAtEnd(finalScreens[6]); // Final Tiempo
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -68,7 +89,12 @@ public class Salida : MonoBehaviour
     {
         string condition = DetermineCondition();
 
-        GameObject firstItem = gamemanger.GetFirstItem();
+        if (isTimeUp)
+        {
+            ShowFinalScreen("Final Tiempo");
+            return;
+        }
+        GameObject firstItem = Listadeobjetos.GetComponent<ListadeObjetos>().GetFirstItem();
         if (firstItem != null && firstItem.name == "Tendedero")
         {
             Debug.Log("Returning 'Final Secreto'");
@@ -94,7 +120,7 @@ public class Salida : MonoBehaviour
         }
         else if (play.velocity <= 3)
         {
-            GameObject firstItem = gamemanger.GetFirstItem();
+            GameObject firstItem = Listadeobjetos.GetComponent<ListadeObjetos>().GetFirstItem();
             if (firstItem != null && firstItem.name == "Celular")
             {
                 Debug.Log("Returning 'Final Celular'");
@@ -131,10 +157,13 @@ public class Salida : MonoBehaviour
                 finalScreen = finalScreenList.ObtainNodeAtPosition(3);
                 break;
             case "Final Mochila":
-                finalScreen = finalScreenList.ObtainNodeAtPosition(3);
+                finalScreen = finalScreenList.ObtainNodeAtPosition(4);
                 break;
             case "Final Ascensor":
                 finalScreen = finalScreenList.ObtainNodeAtPosition(5);
+                break;
+            case "Final Tiempo":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(6);
                 break;
         }
 
@@ -147,5 +176,13 @@ public class Salida : MonoBehaviour
         {
             Debug.LogWarning("No se encontró una pantalla para el final: " + finalName);
         }
+    }
+    private void UpdateTimeText()
+    {
+        textoTiempo.text = "Tiempo Restante: " + Mathf.RoundToInt(tiempoRestante).ToString();
+    }
+    private void HandleTimeUp()
+    {
+        ShowFinalScreen("Final Tiempo");
     }
 }
