@@ -71,7 +71,7 @@ public class Salida : MonoBehaviour
         {
             CheckSecretExitCondition();
         }
-        else if (collision.gameObject.CompareTag("Ascensor"))
+        else if (collision.gameObject.tag == "Ascensor")
         {
             CheckElevatorCondition();
         }
@@ -103,12 +103,13 @@ public class Salida : MonoBehaviour
     }
     private void CheckElevatorCondition()
     {
-        string condition = DetermineCondition();
+        /*string condition = DetermineCondition();
 
         if (condition == "Final Ascensor")
-        {
+        {*/
             ShowFinalScreen("Final Ascensor");
-        }
+        //
+        //}
     }
     private string DetermineCondition()
     {
@@ -125,6 +126,11 @@ public class Salida : MonoBehaviour
             {
                 Debug.Log("Returning 'Final Celular'");
                 return "Final Celular";
+            }
+            else if (firstItem != null && firstItem.name == "Mochila")
+            {
+                Debug.Log("Returning 'Final Mochila'");
+                return "Final Mochila";
             }
             else
             {

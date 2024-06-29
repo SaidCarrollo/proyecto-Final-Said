@@ -20,12 +20,14 @@ public class Player : MonoBehaviour
     public GameObject ListadeObjetos;
     public TextMeshProUGUI infoText;
     [SerializeField] private float rotationSpeed = 5f;
-    public AudioSource Tomar; 
-
+    public AudioSource Tomar;
+    public AudioSource Caminar;
+    public AudioSource Correr;
     void Start()
     {
         originalVelocity = velocity;
         infoText.alpha = 0f;
+        Time.timeScale = 1f;
        /*   Cursor.visible = false;
 
         Cursor.lockState = CursorLockMode.Locked;*/
@@ -70,16 +72,34 @@ public class Player : MonoBehaviour
     public void Movement(InputAction.CallbackContext context)
     {
         _movement = context.ReadValue<Vector2>() * velocity;
+        if (context.performed)
+        {
+                Caminar.Play();
+        }
+        else if (context.canceled)
+        {
+            Caminar.Stop();
+        }
     }
     public void Run(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             velocity = runVelocity;
+            Caminar.Stop();
+            if (!Correr.isPlaying)
+            {
+                Correr.Play();
+            }
         }
         else if (context.canceled)
         {
             velocity = originalVelocity;
+            Correr.Stop();
+            if (_movement != Vector2.zero && !Caminar.isPlaying)
+            {
+                Caminar.Play();
+            }
         }
         _movement = _movement.normalized * velocity;
     }
