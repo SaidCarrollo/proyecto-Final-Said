@@ -7,13 +7,13 @@ public class Sliders : MonoBehaviour
     public Slider masterVolumeSlider;
     public Slider musicVolumeSlider;
     public Slider sfxVolumeSlider;
-    public AudioSettings audioSettings; 
+    public AudioSettings audioSettings;
 
     private void Start()
     {
-        masterVolumeSlider.value = audioSettings.defaultMasterVolume;
-        musicVolumeSlider.value = audioSettings.defaultMusicVolume;
-        sfxVolumeSlider.value = audioSettings.defaultSfxVolume;
+        masterVolumeSlider.value = PlayerPrefs.GetFloat(audioSettings.masterVolumeParameter, audioSettings.defaultMasterVolume);
+        musicVolumeSlider.value = PlayerPrefs.GetFloat(audioSettings.musicVolumeParameter, audioSettings.defaultMusicVolume);
+        sfxVolumeSlider.value = PlayerPrefs.GetFloat(audioSettings.sfxVolumeParameter, audioSettings.defaultSfxVolume);
     }
 
     public void UpdateMasterVolume()
@@ -26,7 +26,7 @@ public class Sliders : MonoBehaviour
         AudioManager.Instance.SetMusicVolume(musicVolumeSlider.value);
     }
 
-    public void UpdateMenuVolume()
+    public void UpdateSFXVolume()
     {
         AudioManager.Instance.SetSFXVolume(sfxVolumeSlider.value);
     }

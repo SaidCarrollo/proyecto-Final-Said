@@ -5,30 +5,33 @@ using TMPro;
 public class ListadeObjetos : MonoBehaviour
 {
     public TextMeshProUGUI inventoryText;
-    public Queue<GameObject> inventoryQueue;
+    public SimplyLinkedList<GameObject> inventoryList;
 
     private void Awake()
     {
-        inventoryQueue = new Queue<GameObject>();
+        inventoryList = new SimplyLinkedList<GameObject>();
     }
 
     public void UpdateInventoryText(string newItem)
     {
         inventoryText.text += newItem + "\n";
-        AddToQueue(GameObject.Find(newItem));
+        AddToInventory(GameObject.Find(newItem));
     }
 
-    public void AddToQueue(GameObject newItem)
+    public void AddToInventory(GameObject newItem)
     {
-        inventoryQueue.Enqueue(newItem);
+        inventoryList.InsertNodeAtEnd(newItem);
     }
 
     public GameObject GetFirstItem()
     {
-        if (inventoryQueue.Count() > 0)
+        try
         {
-            return inventoryQueue.GetAllValues()[0];
+            return inventoryList.ObtainNodeAtStart();
         }
-        return null;
+        catch (System.Exception)
+        {
+            return null;
+        }
     }
 }

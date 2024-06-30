@@ -11,6 +11,7 @@ public class ButonManger : MonoBehaviour
     public GameObject Derecha;
     public AudioSource Comienzo;
     public ButomManager butomManager;
+    public GameObject Creditos;
     public void AbrirLista()
     {
         Abrir.SetActive(true);
@@ -47,7 +48,14 @@ public class ButonManger : MonoBehaviour
     }
     public void CloseGame()
     {
-
         Application.Quit();
+    }
+    public void OpenCredit()
+    {
+        Creditos.SetActive(true);
+    }
+    public void CloseCredit()
+    {
+        Creditos.SetActive(false);
     }
 }

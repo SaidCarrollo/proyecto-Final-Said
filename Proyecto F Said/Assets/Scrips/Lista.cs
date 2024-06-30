@@ -302,4 +302,38 @@ public class SimplyLinkedList<T>
         }
         return false;
     }
+    public void DeleteNodeByValue(T value)
+    {
+        if (Head == null)
+        {
+            throw new System.Exception("No se puede eliminar: la lista está vacía.");
+        }
+
+        if (Head.Value.Equals(value))
+        {
+            DeleteAtStart();
+            return;
+        }
+
+        Node current = Head;
+        Node previous = null;
+
+        while (current != null && !current.Value.Equals(value))
+        {
+            previous = current;
+            current = current.Next;
+        }
+
+        if (current != null)
+        {
+            previous.Next = current.Next;
+            current.Next = null;
+            length--;
+        }
+        else
+        {
+            throw new System.Exception("El valor no se encuentra en la lista.");
+        }
+    }
+
 }

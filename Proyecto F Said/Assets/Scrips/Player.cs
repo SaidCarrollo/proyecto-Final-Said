@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections;using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
@@ -19,6 +18,7 @@ public class Player : MonoBehaviour
     private Camera mainCamera;
     public GameObject ListadeObjetos;
     public TextMeshProUGUI infoText;
+    public TextMeshProUGUI playerControlsText;
     [SerializeField] private float rotationSpeed = 5f;
     public AudioSource Tomar;
     public AudioSource Caminar;
@@ -28,6 +28,11 @@ public class Player : MonoBehaviour
         originalVelocity = velocity;
         infoText.alpha = 0f;
         Time.timeScale = 1f;
+        ShowcontrolsText("Controles:\n" +
+                                 "Movimiento: WASD " +
+                                 "Correr: Shift\n" +
+                                 "Agarrar: E\n"+
+                                 "Camara: Mouse");
        /*   Cursor.visible = false;
 
         Cursor.lockState = CursorLockMode.Locked;*/
@@ -170,5 +175,16 @@ public class Player : MonoBehaviour
             infoText.DOFade(0f, duration);
         });
     }
-  
+    private void ShowcontrolsText(string message)
+    {
+        float duration = 0.5f;
+        playerControlsText.text = message;
+        playerControlsText.alpha = 0f;
+        playerControlsText.DOFade(1f, duration);
+        DOVirtual.DelayedCall(5.0f, () =>
+        {
+            playerControlsText.DOFade(0f, duration);
+        });
+    }
+
 }
