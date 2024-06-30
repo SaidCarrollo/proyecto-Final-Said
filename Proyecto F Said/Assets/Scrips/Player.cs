@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public GameObject ListadeObjetos;
     public TextMeshProUGUI infoText;
     public TextMeshProUGUI playerControlsText;
+    public TextMeshProUGUI ObjetiveText;
     [SerializeField] private float rotationSpeed = 5f;
     public AudioSource Tomar;
     public AudioSource Caminar;
@@ -33,6 +34,7 @@ public class Player : MonoBehaviour
                                  "Correr: Shift\n" +
                                  "Agarrar: E\n"+
                                  "Camara: Mouse");
+        ShowObjetiveText("Busca una salida");
        /*   Cursor.visible = false;
 
         Cursor.lockState = CursorLockMode.Locked;*/
@@ -186,5 +188,15 @@ public class Player : MonoBehaviour
             playerControlsText.DOFade(0f, duration);
         });
     }
-
+    private void ShowObjetiveText(string message)
+    {
+        float duration = 0.5f;
+        ObjetiveText.text = message;
+        ObjetiveText.alpha = 0f;
+        ObjetiveText.DOFade(1f, duration);
+        DOVirtual.DelayedCall(5.0f, () =>
+        {
+            ObjetiveText.DOFade(0f, duration);
+        });
+    }
 }

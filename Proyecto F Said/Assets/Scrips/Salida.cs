@@ -14,7 +14,7 @@ public class Salida : MonoBehaviour
     private float tiempoRestante;
     private bool isTimeUp = false;
     public TextMeshProUGUI textoTiempo;
-    private float[] endingTimes = new float[7];
+    private float[] endingTimes = new float[9];
     private float[] shortestTimes = new float[3];
     public TextMeshProUGUI textoTiemposCortos;
     private void Start()
@@ -49,7 +49,8 @@ public class Salida : MonoBehaviour
         endingsTree.AddNode("Final Mochila", "Final Normal");
         endingsTree.AddNode("Final Ascensor", "root");
         endingsTree.AddNode("Final Tiempo", "root");
-        endingsTree.AddNode("Final Mochila llena", "Final Normal");
+        endingsTree.AddNode("Final Mochila llena", "Final Mochila");
+        endingsTree.AddNode("Final Bruja", "root");
     }
 
     private void InitializeFinalScreenList()
@@ -63,7 +64,8 @@ public class Salida : MonoBehaviour
         finalScreenList.InsertNodeAtEnd(finalScreens[4]); // Final Mochila
         finalScreenList.InsertNodeAtEnd(finalScreens[5]); // Final Ascensor
         finalScreenList.InsertNodeAtEnd(finalScreens[6]); // Final Tiempo
-        finalScreenList.InsertNodeAtEnd(finalScreens[6]); // Final Mochila llena
+        finalScreenList.InsertNodeAtEnd(finalScreens[7]); // Final Mochila llena
+        finalScreenList.InsertNodeAtEnd(finalScreens[8]); // Final Bruja
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -107,6 +109,12 @@ public class Salida : MonoBehaviour
             ShowFinalScreen("Final Secreto");
             RecordEndTime("Final Secreto");
         }
+        if (firstItem != null && firstItem.name == "Escoba")
+        {
+            Debug.Log("Returning 'Final Bruja'");
+            ShowFinalScreen("Final Bruja");
+            RecordEndTime("Final Bruja");
+        }
     }
     private void CheckElevatorCondition()
     {
@@ -135,27 +143,27 @@ public class Salida : MonoBehaviour
                 Debug.Log("Returning 'Final Celular'");
                 return "Final Celular";
             }
-
+            if (firstItem != null && firstItem.name == "Celular")
+            {
+                Debug.Log("Returning 'Final Celular'");
+                return "Final Celular";
+            }
             if (firstItem != null && firstItem.name == "Mochila")
             {
-                Debug.Log("Returning 'Final Mochila'");
-                return "Final Mochila";
-            }
-            if (firstItem != null && firstItem.name == "Mochila" )
-            {
-                //GameObject secondItem = Listadeobjetos.GetComponent<ListadeObjetos>().ObtainNodeAtPositions(1);
-
-                // Verificar si el segundo ítem es una botella
-                // if (secondItem != null && secondItem.name == "botella")
-               // {
-              //      Debug.Log("Returning 'Final Mochila Nueva'");
-              //      return "Final Mochila Nueva";
-               // }
-             //   else
-               // {
+                GameObject secondItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(1);
+                GameObject thirdItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(2);
+                GameObject FourItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(3);
+                GameObject FiveItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(4);
+                if (secondItem != null && secondItem.name == "Botella" && thirdItem.name == "Papel" && FourItem.name == "Botiquin" && FourItem.name == "Plato")
+                {
+                    Debug.Log("Returning 'Final Mochila llena'");
+                    return "Final Mochila llena";
+                }
+              else
+                {
                     Debug.Log("Returning 'Final Mochila'");
                     return "Final Mochila";
-               // }
+                }
             }
             else
             {
@@ -197,7 +205,10 @@ public class Salida : MonoBehaviour
                 finalScreen = finalScreenList.ObtainNodeAtPosition(6);
                 break;
             case "Final Mochila llena":
-                finalScreen = finalScreenList.ObtainNodeAtPosition(6);
+                finalScreen = finalScreenList.ObtainNodeAtPosition(7);
+                break;
+            case "Final Bruja":
+                finalScreen = finalScreenList.ObtainNodeAtPosition(8);
                 break;
         }
 
@@ -239,7 +250,10 @@ public class Salida : MonoBehaviour
                 endingTimes[6] = endTime;
                 break;
             case "Final Mochila llena":
-                endingTimes[6] = endTime;
+                endingTimes[7] = endTime;
+                break;
+            case "Final Bruja":
+                endingTimes[7] = endTime;
                 break;
         }
 
