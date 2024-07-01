@@ -9,13 +9,8 @@ public class Menu : MonoBehaviour
     [SerializeField] private GameObject BotonPausa;
     [SerializeField] private GameObject BotonDespausar;
     [SerializeField] private GameObject Mousepuntero;
-    public Volume GlobalVolume;
-    public Vignette viñeta;
     private bool estaEnPausa = false;
-    private void Awake()
-    {
-        viñeta = (Vignette)GlobalVolume.profile.components.Find(c => c is Vignette);
-    }
+
     public void Pausa(InputAction.CallbackContext contexto)
     {
         if (contexto.performed)
@@ -28,7 +23,6 @@ public class Menu : MonoBehaviour
                 BotonPausa.SetActive(false);
                 Mousepuntero.SetActive(false);
                 BotonDespausar.SetActive(true);
-                viñeta.intensity.value = 0.843f;
             }
             else
             {
@@ -36,7 +30,6 @@ public class Menu : MonoBehaviour
                 BotonPausa.SetActive(true);
                 Mousepuntero.SetActive(true);
                 BotonDespausar.SetActive(false);
-                viñeta.intensity.value = 0f;
             }
         }
     }

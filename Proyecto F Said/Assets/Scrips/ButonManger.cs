@@ -12,6 +12,9 @@ public class ButonManger : MonoBehaviour
     public AudioSource Comienzo;
     public ButomManager butomManager;
     public GameObject Creditos;
+    public AudioSource Menumusic;
+    public AudioSource GameplaySFX;
+
     public void AbrirLista()
     {
         Abrir.SetActive(true);
@@ -30,6 +33,7 @@ public class ButonManger : MonoBehaviour
     {
         StartCoroutine(CargarConRetardo());
         SceneManager.LoadScene("Gameplay");
+        Menumusic.Stop();
     }
 
     private IEnumerator CargarConRetardo()
@@ -41,6 +45,7 @@ public class ButonManger : MonoBehaviour
     public void Regresar()
     {
         SceneManager.LoadScene("Menu");
+        GameplaySFX.Stop();
     }
     public void IniciarTemblorDeCamara()
     {

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 public class Salida : MonoBehaviour
 {
+    public GameObject libreta;
     public Player play;
     public GameObject Listadeobjetos;
     private Tree<string> endingsTree;
@@ -17,6 +18,8 @@ public class Salida : MonoBehaviour
     private float[] endingTimes = new float[9];
     private float[] shortestTimes = new float[3];
     public TextMeshProUGUI textoTiemposCortos;
+    public GameObject Tiempos;
+    public AudioSource Terremotosfx;
     private void Start()
     {
         InitializeEndingsTree();
@@ -72,15 +75,21 @@ public class Salida : MonoBehaviour
     {
         if (collision.gameObject.tag == "Puerta")
         {
+            
             CheckEndCondition();
+          //  Terremotosfx.Stop();
         }
         else if (collision.gameObject.tag == "Salida Secreta")
         {
+            
             CheckSecretExitCondition();
+            //Terremotosfx.Stop();
         }
         else if (collision.gameObject.tag == "Ascensor")
         {
+            
             CheckElevatorCondition();
+           // Terremotosfx.Stop();
         }
     }
 
@@ -90,7 +99,10 @@ public class Salida : MonoBehaviour
         Tree<string>.TreeNode rootNode = endingsTree.GetRoot();
         string finalName = endingsTree.FindFinal(rootNode, condition);
         RecordEndTime(finalName);
-        ShowFinalScreen(finalName);
+        if (finalName != "Final Rápido")
+        {
+            ShowFinalScreen(finalName);
+        }
     }
     private void CheckSecretExitCondition()
     {
@@ -130,7 +142,7 @@ public class Salida : MonoBehaviour
     private string DetermineCondition()
     {
        
-        if (play.velocity >= 5)
+        if (play.velocity== 5)
         {
             Debug.Log("Returning 'Final Rápido'");
             return "Final Rápido";
@@ -143,23 +155,38 @@ public class Salida : MonoBehaviour
                 Debug.Log("Returning 'Final Celular'");
                 return "Final Celular";
             }
-            if (firstItem != null && firstItem.name == "Celular")
-            {
-                Debug.Log("Returning 'Final Celular'");
-                return "Final Celular";
-            }
             if (firstItem != null && firstItem.name == "Mochila")
             {
-                GameObject secondItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(1);
-                GameObject thirdItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(2);
-                GameObject FourItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(3);
-                GameObject FiveItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(4);
-                if (secondItem != null && secondItem.name == "Botella" && thirdItem.name == "Papel" && FourItem.name == "Botiquin" && FourItem.name == "Plato")
+                GameObject secondItem = null;
+                GameObject thirdItem = null;
+                GameObject FourItem = null;
+                GameObject FiveItem = null;
+
+                if (Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.length > 1)
+                {
+                    secondItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(1);
+                }
+                if (Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.length > 2)
+                {
+                    thirdItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(2);
+                }
+                if (Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.length > 3)
+                {
+                    FourItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(3);
+                }
+                if (Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.length > 4)
+                {
+                    FiveItem = Listadeobjetos.GetComponent<ListadeObjetos>().inventoryList.ObtainNodeAtPosition(4);
+                }
+
+                if (secondItem != null && thirdItem != null && FourItem != null && FiveItem != null &&
+                   secondItem.name == "Botella" && thirdItem.name == "Papel" &&
+                   FourItem.name == "Botiquin" && FiveItem.name == "Plato")
                 {
                     Debug.Log("Returning 'Final Mochila llena'");
                     return "Final Mochila llena";
                 }
-              else
+                else
                 {
                     Debug.Log("Returning 'Final Mochila'");
                     return "Final Mochila";
@@ -216,6 +243,8 @@ public class Salida : MonoBehaviour
         {
             finalScreen.SetActive(true);
             Time.timeScale = 0;
+            Tiempos.SetActive(true);
+            libreta.SetActive(false);
         }
         else
         {
@@ -224,7 +253,8 @@ public class Salida : MonoBehaviour
     }
     private void RecordEndTime(string finalName)
     {
-        float endTime = tiempoMaximo - tiempoRestante;
+        float endTime = tiempoRestante; 
+        Debug.Log($"Registrando tiempo {endTime} para el final: {finalName}");
 
         switch (finalName)
         {
@@ -253,20 +283,25 @@ public class Salida : MonoBehaviour
                 endingTimes[7] = endTime;
                 break;
             case "Final Bruja":
-                endingTimes[7] = endTime;
+                endingTimes[8] = endTime;
                 break;
+            default:
+                Debug.LogWarning("Final no reconocido: " + finalName);
+                return;
         }
 
+        Debug.Log("Tiempos antes de ordenar: " + string.Join(", ", endingTimes));
         SelectionSortEnhanced(endingTimes);
+        Debug.Log("Tiempos después de ordenar: " + string.Join(", ", endingTimes));
 
         for (int i = 0; i < Mathf.Min(3, endingTimes.Length); i++)
         {
             shortestTimes[i] = endingTimes[i];
         }
+
         UpdateShortestTimesText();
         Debug.Log("Tiempos más cortos: " + string.Join(", ", shortestTimes));
     }
-
     private void SelectionSortEnhanced(float[] numbers)
     {
         int minId;

@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI infoText;
     public TextMeshProUGUI playerControlsText;
     public TextMeshProUGUI ObjetiveText;
+    public TextMeshProUGUI adviceText;
     [SerializeField] private float rotationSpeed = 5f;
     public AudioSource Tomar;
     public AudioSource Caminar;
@@ -35,18 +36,10 @@ public class Player : MonoBehaviour
                                  "Agarrar: E\n"+
                                  "Camara: Mouse");
         ShowObjetiveText("Busca una salida");
-       /*   Cursor.visible = false;
+        AdviceText("Las puertas se pueden traspasar");
 
-        Cursor.lockState = CursorLockMode.Locked;*/
     }
-  
-   /* private void Update()
-    {
-        if (Cursor.lockState != CursorLockMode.Locked)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }*/
+
     void FixedUpdate()
     {
         
@@ -166,37 +159,34 @@ public class Player : MonoBehaviour
             objectToDisable.SetActive(false);
         });
     }
-    private void ShowInfoText(string message)
+    private void ShowText(TextMeshProUGUI textComponent, string message, float displayDuration)
     {
-        float duration = 0.5f;
-        infoText.text = message;
-        infoText.alpha = 0f;
-        infoText.DOFade(1f, duration);
-        DOVirtual.DelayedCall(1.0f, () =>
+        float fadeDuration = 0.5f;
+        textComponent.text = message;
+        textComponent.alpha = 0f;
+        textComponent.DOFade(1f, fadeDuration);
+        DOVirtual.DelayedCall(displayDuration, () =>
         {
-            infoText.DOFade(0f, duration);
+            textComponent.DOFade(0f, fadeDuration);
         });
     }
     private void ShowcontrolsText(string message)
     {
-        float duration = 0.5f;
-        playerControlsText.text = message;
-        playerControlsText.alpha = 0f;
-        playerControlsText.DOFade(1f, duration);
-        DOVirtual.DelayedCall(5.0f, () =>
-        {
-            playerControlsText.DOFade(0f, duration);
-        });
+        ShowText(playerControlsText, message, 5.0f);
     }
+
     private void ShowObjetiveText(string message)
     {
-        float duration = 0.5f;
-        ObjetiveText.text = message;
-        ObjetiveText.alpha = 0f;
-        ObjetiveText.DOFade(1f, duration);
-        DOVirtual.DelayedCall(5.0f, () =>
-        {
-            ObjetiveText.DOFade(0f, duration);
-        });
+        ShowText(ObjetiveText, message, 5.0f);
+    }
+
+    private void AdviceText(string message)
+    {
+        ShowText(adviceText, message, 10.0f);
+    }
+
+    private void ShowInfoText(string message)
+    {
+        ShowText(infoText, message, 1.0f);
     }
 }
