@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BeastTimes", menuName = "ScriptableObjects/TiemposData", order = 1)]
 public class Beast3 : ScriptableObject
 {
-    public float[] shortestTimes = new float[3];
+    public SimplyLinkedList<float> shortestTimesList = new SimplyLinkedList<float>();
+
 }

@@ -114,7 +114,11 @@ public class SimplyLinkedList<T>
             last.Value = value;
         }
     }
-
+    public void Clear()
+    {
+        Head = null;
+        length = 0;
+    }
     public void ModifyAtPosition(T value, int position)
     {
         if (position == 0)

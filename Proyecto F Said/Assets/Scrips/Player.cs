@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
         {
             Caminar.Stop();
         }
-    }
+    }// O(1), Porque tanto la lectura del valor input y la reproducion y detencion del sonido son en tiempo constante  
     public void Run(InputAction.CallbackContext context)
     {
         if (context.performed)

@@ -39,7 +39,7 @@ public class ConsejosfinalesLista : MonoBehaviour
             currentIndex = index;
         }
         UpdateButtonStates();
-    }
+    }//O(N), getNodeAtPosition contiene un while, osea un bucle, por lo cual lo hace 0(N)
 
     void ShowPreviousConsejo()
     {
@@ -74,5 +74,5 @@ public class ConsejosfinalesLista : MonoBehaviour
     {
         previousButton.interactable = currentIndex > 0;
         nextButton.interactable = currentIndex < consejosLista.Length() - 1;
-    }
+    }//O(1), Porque simplemente actualiza el estado de los botones de navegación
 }

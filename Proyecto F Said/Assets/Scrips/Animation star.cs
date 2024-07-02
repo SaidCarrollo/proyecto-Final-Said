@@ -19,7 +19,7 @@ public class ButomManager : MonoBehaviour
     public void StartCameraShake(float intensity, float frequency, float time)
     {
         MovementCamera(intensity, frequency, time);
-    }
+    }//0(1) Porque simplemente asignan valores a propiedades de un componente.
     private void MovementCamera(float intensity, float frequency, float time)
     {
         CinemachinePerlin.m_AmplitudeGain = intensity;
@@ -27,7 +27,7 @@ public class ButomManager : MonoBehaviour
         intensityFirst = intensity;
         TimeTotal = time;
         Timemovement = time;
-    }
+    }//0(1) Porque simplemente asignan valores 
 
     private void Update()
     {

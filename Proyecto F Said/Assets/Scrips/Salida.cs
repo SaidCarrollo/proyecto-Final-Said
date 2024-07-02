@@ -15,15 +15,15 @@ public class Salida : MonoBehaviour
     private float tiempoRestante;
     private bool isTimeUp = false;
     public TextMeshProUGUI textoTiempo;
-    private float[] endingTimes = new float[9];
-    private float[] shortestTimes = new float[3];
+    public SimplyLinkedList<float> endingTimesList = new SimplyLinkedList<float>();
+    public SimplyLinkedList<float> shortestTimesList = new SimplyLinkedList<float>();
     public TextMeshProUGUI textoTiemposCortos;
     public GameObject Tiempos;
     public AudioSource Terremotosfx;
     public Beast3 tiemposData;
+    private const int MaxShortestTimes = 3;
     private void Start()
     {
-
         InitializeEndingsTree();
         InitializeFinalScreenList();
         tiempoRestante = tiempoMaximo;
@@ -81,19 +81,16 @@ public class Salida : MonoBehaviour
         {
             
             CheckEndCondition();
-          //  Terremotosfx.Stop();
         }
         else if (collision.gameObject.tag == "Salida Secreta")
         {
             
             CheckSecretExitCondition();
-            //Terremotosfx.Stop();
         }
         else if (collision.gameObject.tag == "Ascensor")
         {
             
             CheckElevatorCondition();
-           // Terremotosfx.Stop();
         }
     }
 
@@ -215,7 +212,7 @@ public class Salida : MonoBehaviour
         switch (finalName)
         {
             case "Final Normal":
-                finalScreen = finalScreenList.ObtainNodeAtPosition(0);
+                finalScreen = finalScreenList.ObtainNodeAtPosition(0);//O(1) Al ser una lista simple el acceso es directo
                 break;
             case "Final Secreto":
                 finalScreen = finalScreenList.ObtainNodeAtPosition(1);
@@ -241,7 +238,7 @@ public class Salida : MonoBehaviour
             case "Final Bruja":
                 finalScreen = finalScreenList.ObtainNodeAtPosition(8);
                 break;
-        }
+        }//O(1) Ya que solo es seleccionar una pantalla basado en su nombre y los casos son finitos
 
         if (finalScreen != null)
         {
@@ -254,59 +251,40 @@ public class Salida : MonoBehaviour
         {
             Debug.LogWarning("No se encontró una pantalla para el final: " + finalName);
         }
-    }
+    }//O(1)Porque todas las operaciones realizadas dentro son constantes y no dependen del tamaño de ninguna estructura de datos ni de un bucle, nisuiqera ObtainnodeAtPosition tiene un bucle como un while o for
     private void RecordEndTime(string finalName)
     {
-        float endTime = tiempoRestante;
-        float remainingSeconds = tiempoMaximo - endTime; // Calcula los segundos de sobra
+        float remainingSeconds = tiempoRestante;
 
-        Debug.Log($"Registrando tiempo {endTime} para el final: {finalName}. Segundos de sobra: {remainingSeconds}");
+        Debug.Log($"Registrando tiempo sobrante {remainingSeconds} para el final: {finalName}");
+        PlayerPrefs.SetFloat(finalName + "RemainingTime", remainingSeconds);
+        PlayerPrefs.Save();
 
-        switch (finalName)
+        // Insertar y ordenar el nuevo tiempo
+        InsertAndSortShortestTime(remainingSeconds);
+    }
+    private void InsertAndSortShortestTime(float newTime)
+    {
+        float[] times = new float[MaxShortestTimes];
+
+        for (int i = 0; i < MaxShortestTimes; i++)
         {
-            case "Final Normal":
-                endingTimes[0] = endTime;
-                break;
-            case "Final Secreto":
-                endingTimes[1] = endTime;
-                break;
-            case "Final Rápido":
-                endingTimes[2] = endTime;
-                break;
-            case "Final Celular":
-                endingTimes[3] = endTime;
-                break;
-            case "Final Mochila":
-                endingTimes[4] = endTime;
-                break;
-            case "Final Ascensor":
-                endingTimes[5] = endTime;
-                break;
-            case "Final Tiempo":
-                endingTimes[6] = endTime;
-                break;
-            case "Final Mochila llena":
-                endingTimes[7] = endTime;
-                break;
-            case "Final Bruja":
-                endingTimes[8] = endTime;
-                break;
-            default:
-                Debug.LogWarning("Final no reconocido: " + finalName);
-                return;
+            string key = $"ShortestTime{i + 1}";
+            times[i] = PlayerPrefs.GetFloat(key, float.MaxValue); 
         }
 
-        Debug.Log("Tiempos antes de ordenar: " + string.Join(", ", endingTimes));
-        BubbleSort(endingTimes); // Usa el Bubble Sort para ordenar los tiempos
-        Debug.Log("Tiempos después de ordenar: " + string.Join(", ", endingTimes));
+        times[MaxShortestTimes - 1] = newTime;
+        BubbleSort(times);
 
-        for (int i = 0; i < Mathf.Min(3, endingTimes.Length); i++)
+        for (int i = 0; i < MaxShortestTimes; i++)
         {
-            shortestTimes[i] = endingTimes[i];
+            string key = $"ShortestTime{i + 1}";
+            PlayerPrefs.SetFloat(key, times[i]);
         }
+
+        PlayerPrefs.Save();
 
         UpdateShortestTimesText();
-        Debug.Log("Tiempos más cortos: " + string.Join(", ", shortestTimes));
     }
     private void BubbleSort(float[] numbers)
     {
@@ -319,7 +297,7 @@ public class Salida : MonoBehaviour
 
             for (int j = 0; j < numbers.Length - i - 1; j++)
             {
-                if (numbers[j] > numbers[j + 1])
+                if (numbers[j] < numbers[j + 1])
                 {
                     tmp = numbers[j];
                     numbers[j] = numbers[j + 1];
@@ -327,7 +305,6 @@ public class Salida : MonoBehaviour
                     swapped = true;
                 }
             }
-            Debug.Log("Estado del arreglo después de la pasada " + (i + 1) + ": " + string.Join(", ", numbers));
 
             if (!swapped)
             {
@@ -335,14 +312,32 @@ public class Salida : MonoBehaviour
             }
         }
     }
+    private void LoadShortestTimes()
+    {
+        for (int i = 0; i < MaxShortestTimes; i++)
+        {
+            string key = $"ShortestTime{i + 1}";
+            float savedTime = PlayerPrefs.GetFloat(key, float.MaxValue);
+            shortestTimesList.InsertNodeAtEnd(savedTime);
+        }
+    }
+
     private void UpdateShortestTimesText()
     {
         if (textoTiemposCortos != null)
         {
             textoTiemposCortos.text = "Tiempos más cortos:\n";
-            for (int i = 0; i < Mathf.Min(3, tiemposData.shortestTimes.Length); i++)
+            for (int i = 0; i < Mathf.Min(MaxShortestTimes, shortestTimesList.length); i++)
             {
-                textoTiemposCortos.text += (i + 1) + ". " + tiemposData.shortestTimes[i].ToString("F2") + "\n";
+                float time = shortestTimesList.ObtainNodeAtPosition(i);
+                if (time > 0)
+                {
+                    textoTiemposCortos.text += (i + 1) + ". " + time.ToString("F2") + " segundos\n";
+                }
+                else
+                {
+                    textoTiemposCortos.text += (i + 1) + ". --\n";
+                }
             }
         }
         else
@@ -351,37 +346,25 @@ public class Salida : MonoBehaviour
         }
     }
 
-    private void SaveShortestTimes()
+    public void ResetTimes()
     {
-
-        for (int i = 0; i < tiemposData.shortestTimes.Length; i++)
-        {
-            PlayerPrefs.SetFloat("ShortestTime" + i, tiemposData.shortestTimes[i]);
-        }
-        PlayerPrefs.Save();
+        PlayerPrefs.DeleteAll();
+        shortestTimesList.Clear(); 
+        UpdateShortestTimesText();
     }
 
-    private void LoadShortestTimes()
-    {
-        for (int i = 0; i < tiemposData.shortestTimes.Length; i++)
-        {
-            tiemposData.shortestTimes[i] = PlayerPrefs.GetFloat("ShortestTime" + i, float.MaxValue);
-        }
-    }
     private void UpdateTimeText()
     {
         textoTiempo.text = "Tiempo Restante: " + Mathf.RoundToInt(tiempoRestante).ToString();
     }
+
     private void HandleTimeUp()
     {
-        ShowFinalScreen("Final Tiempo");
-        RecordEndTime("Final Tiempo");
+        Terremotosfx.Stop();
+        Terremotosfx.Play();
+        Time.timeScale = 0;
+        Tiempos.SetActive(true);
+        libreta.SetActive(false);
     }
-    public void ResetTimes()
-    {
-        PlayerPrefs.DeleteAll(); 
-        endingTimes = new float[9]; 
-        shortestTimes = new float[3];
-        UpdateShortestTimesText();
-    }
+
 }

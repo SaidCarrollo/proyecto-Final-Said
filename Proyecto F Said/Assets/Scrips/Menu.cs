@@ -32,7 +32,7 @@ public class Menu : MonoBehaviour
                 BotonDespausar.SetActive(false);
             }
         }
-    }
+    }//0(1) son operaciones constantes sin bucles 
     public void Pausar()
     {
         BotonPausa.SetActive(false);
