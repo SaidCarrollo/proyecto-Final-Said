@@ -20,11 +20,15 @@ public class Salida : MonoBehaviour
     public TextMeshProUGUI textoTiemposCortos;
     public GameObject Tiempos;
     public AudioSource Terremotosfx;
+    public Beast3 tiemposData;
     private void Start()
     {
+
         InitializeEndingsTree();
         InitializeFinalScreenList();
         tiempoRestante = tiempoMaximo;
+        LoadShortestTimes();
+        UpdateShortestTimesText();
     }
     private void Update()
     {
@@ -253,8 +257,10 @@ public class Salida : MonoBehaviour
     }
     private void RecordEndTime(string finalName)
     {
-        float endTime = tiempoRestante; 
-        Debug.Log($"Registrando tiempo {endTime} para el final: {finalName}");
+        float endTime = tiempoRestante;
+        float remainingSeconds = tiempoMaximo - endTime; // Calcula los segundos de sobra
+
+        Debug.Log($"Registrando tiempo {endTime} para el final: {finalName}. Segundos de sobra: {remainingSeconds}");
 
         switch (finalName)
         {
@@ -291,7 +297,7 @@ public class Salida : MonoBehaviour
         }
 
         Debug.Log("Tiempos antes de ordenar: " + string.Join(", ", endingTimes));
-        SelectionSortEnhanced(endingTimes);
+        BubbleSort(endingTimes); // Usa el Bubble Sort para ordenar los tiempos
         Debug.Log("Tiempos después de ordenar: " + string.Join(", ", endingTimes));
 
         for (int i = 0; i < Mathf.Min(3, endingTimes.Length); i++)
@@ -302,25 +308,30 @@ public class Salida : MonoBehaviour
         UpdateShortestTimesText();
         Debug.Log("Tiempos más cortos: " + string.Join(", ", shortestTimes));
     }
-    private void SelectionSortEnhanced(float[] numbers)
+    private void BubbleSort(float[] numbers)
     {
-        int minId;
         float tmp;
-        for (int i = 0; i < numbers.Length - 1; ++i)
+        bool swapped;
+
+        for (int i = 0; i < numbers.Length - 1; i++)
         {
-            minId = i;
-            for (int j = i + 1; j < numbers.Length; ++j)
+            swapped = false;
+
+            for (int j = 0; j < numbers.Length - i - 1; j++)
             {
-                if (numbers[minId] > numbers[j])
+                if (numbers[j] > numbers[j + 1])
                 {
-                    minId = j;
+                    tmp = numbers[j];
+                    numbers[j] = numbers[j + 1];
+                    numbers[j + 1] = tmp;
+                    swapped = true;
                 }
             }
-            if (minId != i)
+            Debug.Log("Estado del arreglo después de la pasada " + (i + 1) + ": " + string.Join(", ", numbers));
+
+            if (!swapped)
             {
-                tmp = numbers[i];
-                numbers[i] = numbers[minId];
-                numbers[minId] = tmp;
+                break;
             }
         }
     }
@@ -329,14 +340,32 @@ public class Salida : MonoBehaviour
         if (textoTiemposCortos != null)
         {
             textoTiemposCortos.text = "Tiempos más cortos:\n";
-            for (int i = 0; i < Mathf.Min(3, shortestTimes.Length); i++)
+            for (int i = 0; i < Mathf.Min(3, tiemposData.shortestTimes.Length); i++)
             {
-                textoTiemposCortos.text += (i + 1) + ". " + shortestTimes[i].ToString("F2") + "\n";
+                textoTiemposCortos.text += (i + 1) + ". " + tiemposData.shortestTimes[i].ToString("F2") + "\n";
             }
         }
         else
         {
             Debug.LogWarning("El objeto de texto para los tiempos más cortos no está asignado en el Inspector.");
+        }
+    }
+
+    private void SaveShortestTimes()
+    {
+
+        for (int i = 0; i < tiemposData.shortestTimes.Length; i++)
+        {
+            PlayerPrefs.SetFloat("ShortestTime" + i, tiemposData.shortestTimes[i]);
+        }
+        PlayerPrefs.Save();
+    }
+
+    private void LoadShortestTimes()
+    {
+        for (int i = 0; i < tiemposData.shortestTimes.Length; i++)
+        {
+            tiemposData.shortestTimes[i] = PlayerPrefs.GetFloat("ShortestTime" + i, float.MaxValue);
         }
     }
     private void UpdateTimeText()
@@ -347,5 +376,12 @@ public class Salida : MonoBehaviour
     {
         ShowFinalScreen("Final Tiempo");
         RecordEndTime("Final Tiempo");
+    }
+    public void ResetTimes()
+    {
+        PlayerPrefs.DeleteAll(); 
+        endingTimes = new float[9]; 
+        shortestTimes = new float[3];
+        UpdateShortestTimesText();
     }
 }
