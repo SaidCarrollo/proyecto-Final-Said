@@ -5914,7 +5914,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -307, y: -43.4}
+  m_AnchoredPosition: {x: 294, y: 180.5}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &976635735
@@ -10674,7 +10674,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -307, y: 17.079}
+  m_AnchoredPosition: {x: -298.8, y: 180.49998}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1562363194
@@ -11624,7 +11624,7 @@ MonoBehaviour:
 
     Drossrotzank
 
-'
+    123RF'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 83271501e53ff754fbfaa2714616e7b0, type: 2}
   m_sharedMaterial: {fileID: -55067064136069849, guid: 83271501e53ff754fbfaa2714616e7b0,

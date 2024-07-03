@@ -73,13 +73,13 @@ public class Salida : MonoBehaviour
         finalScreenList.InsertNodeAtEnd(finalScreens[6]); // Final Tiempo
         finalScreenList.InsertNodeAtEnd(finalScreens[7]); // Final Mochila llena
         finalScreenList.InsertNodeAtEnd(finalScreens[8]); // Final Bruja
-    }
+    }//O(N) Por el While
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Puerta")
         {
-            
+
             CheckEndCondition();
         }
         else if (collision.gameObject.tag == "Salida Secreta")
@@ -100,10 +100,20 @@ public class Salida : MonoBehaviour
         Tree<string>.TreeNode rootNode = endingsTree.GetRoot();
         string finalName = endingsTree.FindFinal(rootNode, condition);
         RecordEndTime(finalName);
-        if (finalName != "Final Rápido")
+
+        if (finalName != "Final Normal" &&
+     finalName != "Final Secreto" &&
+     finalName != "Final Celular" &&
+     finalName != "Final Mochila" &&
+     finalName != "Final Ascensor" &&
+     finalName != "Final Tiempo" &&
+     finalName != "Final Mochila llena" &&
+     finalName != "Final Bruja")
         {
-            ShowFinalScreen(finalName);
+            finalName = "Final Rápido";
         }
+
+      ShowFinalScreen(finalName);
     }
     private void CheckSecretExitCondition()
     {
@@ -219,6 +229,7 @@ public class Salida : MonoBehaviour
                 break;
             case "Final Rápido":
                 finalScreen = finalScreenList.ObtainNodeAtPosition(2);
+                Debug.Log("Mostrando pantalla para 'Final Rápido'");
                 break;
             case "Final Celular":
                 finalScreen = finalScreenList.ObtainNodeAtPosition(3);
@@ -297,7 +308,7 @@ public class Salida : MonoBehaviour
 
             for (int j = 0; j < numbers.Length - i - 1; j++)
             {
-                if (numbers[j] < numbers[j + 1])
+                if (numbers[j] > numbers[j + 1])
                 {
                     tmp = numbers[j];
                     numbers[j] = numbers[j + 1];
@@ -327,16 +338,16 @@ public class Salida : MonoBehaviour
         if (textoTiemposCortos != null)
         {
             textoTiemposCortos.text = "Tiempos más cortos:\n";
-            for (int i = 0; i < Mathf.Min(MaxShortestTimes, shortestTimesList.length); i++)
+            for (int i = Mathf.Min(MaxShortestTimes, shortestTimesList.length) - 1; i >= 0; i--)
             {
                 float time = shortestTimesList.ObtainNodeAtPosition(i);
                 if (time > 0)
                 {
-                    textoTiemposCortos.text += (i + 1) + ". " + time.ToString("F2") + " segundos\n";
+                    textoTiemposCortos.text += (MaxShortestTimes - i) + ". " + time.ToString("F2") + " segundos\n";
                 }
                 else
                 {
-                    textoTiemposCortos.text += (i + 1) + ". --\n";
+                    textoTiemposCortos.text += (MaxShortestTimes - i) + ". --\n";
                 }
             }
         }
